@@ -1,0 +1,152 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  /* padding-left: 100px; */
+}
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.my-navbar {
+  color: rgb(255, 243, 243);
+  display: flex;
+  height: 60px;
+  width: 100%;
+  background-color: rgb(241, 14, 82);
+  gap: 70px;
+  justify-content: left;
+  padding-top: 15px;
+  padding-left: 50px;
+}
+.my-navbar a {
+  text-decoration: none;
+  color: rgb(255, 243, 243);
+  margin-top: 0;
+}
+.my-navbar a:hover {
+  color: rgb(255, 136, 0);
+  border-radius: 2px;
+}
+h1 {
+  color: red;
+  font-weight: 700;
+  text-align: center;
+  padding-top: 100px;
+  padding-bottom: 40px;
+  padding-right: 20vh;
+  padding-left: 5vh;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+ul {
+  display: flex;
+  margin-right: 600px;
+  gap: 90px;
+  list-style: none;
+}
+li{
+  background-color: #ffd700;
+}
+#btn1 {
+  height: 40px;
+  width: 80px;
+  background-color: rgb(248, 166, 12);
+  text-align: center;
+  padding-top: 7px;
+  border-radius: 7px;
+  margin-left: AUTO;
+}
+.my-navbar #btn1:hover {
+  background-color: red;
+  text-decoration: none;
+  color: white;
+}
+
+.Container {
+  color: rgb(255, 243, 243);
+  background-image: url("./Pages/pre-prepared-food-showcasing-ready-eat-delicious-meals-go.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding-top: 50px;
+
+  margin-top: 50px;
+  min-height: 80vh;
+}
+
+#email1 {
+  padding-right: 20px;
+  padding-bottom: 40px;
+  padding-left: 80px;
+  color: black;
+}
+.loginhead {
+  color: red;
+  font-size: 50px;
+  padding-top: 10px;
+  padding-left: 140px;
+  margin-top: 40px;
+}
+.container {
+  background-color: #ffd700;
+  width: 500px;
+  border-radius: 30px;
+}
+#pass1 {
+  padding-right: 20px;
+  padding-bottom: 40px;
+  padding-left: 50px;
+  color: black;
+}
+#pass2,
+#email2,
+#conpass2,
+#mobile2 {
+  width: 280px;
+  height: 33px;
+}
+#btn3 {
+  margin-left: 200px;
+  margin-bottom: 50px;
+  background-color: #61dafbaa;
+  border-radius: 5px;
+  margin-top: 30px;
+}
+#btn3:hover {
+  background-color: orangered;
+  color: white;
+}
+
+.logo1 {
+  color: orange;
+}
