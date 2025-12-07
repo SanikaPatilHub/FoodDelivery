@@ -2,7 +2,8 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Home from "./Pages/Home";
 import Navbar from "./Components/Navbar";
-import Login from "./Pages/Login";   // FIXED
+import Login from "./Pages/Login";
+import Card from "./Pages/Card";
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
 
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />  {/* WORKS NOW */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/card" element={<Card />} />
       </Routes>
     </>
   );

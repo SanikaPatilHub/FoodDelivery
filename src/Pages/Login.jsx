@@ -15,7 +15,7 @@ const Login = () => {
   };
   return (
     <>
-      <div className="container">
+      <div className="container1">
         <h1 className="loginhead">Login</h1>
         <form onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="" id="email1">
