@@ -1,4 +1,3 @@
-import React from "react";
 
 const Card = ({ cartItems, setCartItems }) => {
   const increaseQty = (id) => {
@@ -10,21 +9,6 @@ const Card = ({ cartItems, setCartItems }) => {
       )
     );
   };
-
-  const decreaseQty = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
-  };
-
   const grandTotal = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
     0

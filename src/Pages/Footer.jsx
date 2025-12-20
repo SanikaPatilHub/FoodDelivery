@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import tacoImage from "../assets/delicious-taco-studio-removebg-preview.png";
 
 const Footer = () => {
   return (
@@ -24,15 +23,34 @@ const Footer = () => {
           </p>
         </div>
         <div className="links">
-          <h3 className="link_header">QUICK LINKS</h3>
-          <NavLink to="/" className="footer-link">
-            Home
-          </NavLink>
-        </div>
-        <div className="footer-top"></div>
-        <h1 className="header">
-          Food <span style={{ color: "rgb(35, 255, 6)" }}> Express</span>
-        </h1>
+  <h3 className="link_header">QUICK LINKS</h3>
+
+  <NavLink  
+    to="/"
+    onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+    id="navlink"
+  >
+    Home
+  </NavLink>
+
+  <NavLink
+    to="/menulist"
+    className={({ isActive }) => (isActive ? "activemenu" : "")}  
+    id="navlink"
+    
+  >
+    Menu
+  </NavLink>
+
+  <NavLink
+  id="navlink"
+    to="/contact"
+    className={({ isActive }) => (isActive ? "activemenu" : "")}
+  >
+    Contact
+  </NavLink>
+</div>
+        <div className="footer-top"></div> 
       </footer>
 
       <div className="footer-bottom">

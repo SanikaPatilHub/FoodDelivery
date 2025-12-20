@@ -31,6 +31,7 @@ const Home = ({ addToCart, search }) => {
             <span style={{ color: "rgb(43, 255, 0)", fontFamily: "serif" }}>
               Now Online
             </span>
+            
           </h1>
 
           <h5 className="para">
@@ -40,7 +41,9 @@ const Home = ({ addToCart, search }) => {
             <br />
             Every bite delivers pure satisfaction.
           </h5>
+          
         </div>
+        
 
        
         <div className="food-section" ref={menuRef}>
@@ -54,7 +57,7 @@ const Home = ({ addToCart, search }) => {
                     src={item.image}
                     alt={item.name}
                     className="foodimage"
-                    style={{ width: "190px" }}
+                    style={{ width: "220px" }}
                   />
 
                   <h3 style={{ color: "red" }}>{item.name}</h3>
