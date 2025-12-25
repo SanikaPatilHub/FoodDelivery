@@ -1,106 +1,106 @@
 import { useForm } from "react-hook-form";
+import emailjs from "@emailjs/browser";
+
 
 const Contact = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log(data);
-    alert("submiited!!!!");
+    emailjs
+      .send(
+        "service_portfolio001",
+        "template_react002",
+        {
+          name: data.firstName + " " + data.lastName,
+          email: data.email,
+          contactNo: data.phone,
+          message: "Order Checkout Form Submission",
+        },
+        "G533phsevBqhFQyIm"
+      )
+      .then(
+        () => {
+          alert( "message sent successfully!!!");
+          reset();
+        },
+        () => {
+          alert("Failed to send message ");
+        }
+      );
   };
 
   return (
-    <div className="contactsection">
-      <div className="contactus">
-        <h1 style={{ paddingTop: "40px" }}>CONTACT US</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
+    <div className="checkout-container">
+      
+      <form className="delivery-box" onSubmit={handleSubmit(onSubmit)}>
+        <h1>Contact Us</h1>
+
+        <div className="row">
           <input
-            placeholder=" Name"
-            {...register("Name", { required: true })}
+            placeholder="First Name"
+            {...register("firstName", { required: true })}
+            className="textbox1"
             style={{
-              marginBottom: "10px",
-              paddingBottom: "20PX",
-              width: "350PX",
-              borderRadius: "5PX",
-              borderStyle: "double",
+              marginLeft:"8px"
             }}
           />
-          {errors.Name && <p> name is required</p>}
+          
+        </div>
+        {errors.firstName && <p>First name required</p>}
 
-          <br />
+        <input
+          placeholder="Email Address"
+          {...register("email", { required: true })}
+          className="textbox1"
+        />
+        {errors.email && <p>Email required</p>}
 
-          <input
-            placeholder="Contact Number"
-            {...register("contactNo", {
-              required: true,
-              pattern: /^[0-9]{10}$/,
-            })}
-            style={{
-              marginBottom: "10px",
-              paddingBottom: "20PX",
-              width: "350PX",
-              borderRadius: "5PX",
-              borderStyle: "double",
-            }}
-          />
-          {errors.contactNo && <p>Enter valid 10-digit contact number</p>}
+       
 
-          <br />
-          <input
-            type="email"
-            placeholder="Email"
-            {...register("email", {
-              required: true,
-              pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            })}
-            style={{
-              marginBottom: "10px",
-              paddingBottom: "20PX",
-              width: "350PX",
-              borderRadius: "5PX",
-              borderStyle: "double",
-            }}
-          />
-          {errors.email && <p>Enter a valid email</p>}
+        
 
-          <br />
-          <textarea
-            placeholder="Message"
-            {...register("message", {
-              required: true,
-              minLength: 10,
-            })}
-            style={{
-              marginBottom: "10px",
-              paddingBottom: "40PX",
-              width: "350PX",
-              borderRadius: "5PX",
-              borderStyle: "double",
-            }}
-          />
-          {errors.message && <p>Message must be at least 10 characters</p>}
+     
 
-          <br />
+        <input
+          placeholder="Phone Number"
+          {...register("phone", {
+            required: true,
+            pattern: /^[0-9]{10}$/,
+          })}
+          className="textbox1"
+        />
+        {errors.phone && <p>Enter valid phone number</p>}
+<textarea
+  placeholder="Your Message"
+  {...register("message", {
+    required: "Message is required",
+    minLength: {
+      value: 10,
+      message: "Message must be at least 10 characters",
+    },
+  })}
+  className="message-box"
+  
+/>
 
-          <button
-            type="submit"
-            className="feed"
-            style={{
-              marginBottom: "50px",
-              paddingBottom: "9PX",
-              width: "350PX",
-              borderRadius: "5PX",
-              borderStyle: "double",
-            }}
-          >
-            Submit
-          </button>
-        </form>
-      </div>
-    </div>
+{errors.message && (
+  <p className="error">{errors.message.message}</p>
+)}
+<br />
+        <button type="submit" className="pay-btn">
+          Send Message
+        </button>
+      </form>
+
+      
+        </div>
+      
+   
   );
 };
 

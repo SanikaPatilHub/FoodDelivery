@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Home from "./Pages/Home";
 import Navbar from "./Components/Navbar";
 import Login from "./Pages/Login";
@@ -10,7 +10,17 @@ import Footer from "./Pages/Footer";
 
 function App() {
   const [search, setSearch] = useState("");
-  const [cartItems, setCartItems] = useState([]);
+  
+  // Initialize cart from localStorage
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // Save to localStorage whenever cart changes
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const addToCart = (item) => {
     setCartItems((prev) => {
@@ -32,12 +42,12 @@ function App() {
         <Route path="/" element={<Home search={search} addToCart={addToCart} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/menulist" element={<Home search={search} addToCart={addToCart} />} />
-          <Route path="/contact" element={<Home />} />
+        <Route path="/contact" element={<Home />} />
         <Route
           path="/card"
           element={
             <PrivateRoute>
-              <Card cartItems={cartItems} />
+              <Card cartItems={cartItems} setCartItems={setCartItems} />
             </PrivateRoute>
           }
         />

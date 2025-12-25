@@ -27,13 +27,13 @@ const Home = ({ addToCart, search }) => {
       <div className="home-container">
         <div className="section3">
           <h1 className="hero-text">
-            Your <span style={{ color: "orangered" }}>hunger</span> solution is{" "}
+            Your <span style={{ color: "blue" }}>hunger</span> solution is{" "}
             <span style={{ color: "rgb(43, 255, 0)", fontFamily: "serif" }}>
               Now Online
             </span>
             
           </h1>
-
+        
           <h5 className="para">
             Where fresh ingredients meet irresistible flavors.
             <br />
@@ -41,8 +41,16 @@ const Home = ({ addToCart, search }) => {
             <br />
             Every bite delivers pure satisfaction.
           </h5>
-          
+<div className="btn-container">
+           <button 
+    className="btn-secondary" 
+    onClick={() => menuRef.current?.scrollIntoView({ behavior: "smooth" })}
+  >
+    View Menu
+  </button>
+  </div>
         </div>
+        
         
 
        

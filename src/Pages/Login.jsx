@@ -7,68 +7,70 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
     reset,
+    formState: { errors },
   } = useForm();
 
-  const Email = "sanika123@gmail.com";
-  const Password = "3456";
+  // Demo credentials (for project purpose)
+  const DEMO_EMAIL = "sanika123@gmail.com";
+  const DEMO_PASSWORD = "3456";
 
   const onSubmit = (data) => {
-    if (data.email === Email && data.password === Password) {
-      
+    if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
       localStorage.setItem("foodbite_auth", "true");
-
-      alert("Login Successful!");
-      console.log(Email);
-      console.log(Password);
-      
-      
-      navigate("/");
+      alert("Login Successful ");
       reset();
+      navigate("/");
     } else {
-      alert("Invalid Email or Password!");
+      alert("Invalid Email or Password ❌");
     }
   };
 
   return (
-    <>
-      <div className="section2">
-        <div className="container1">
-          <h1 className="loginhead">Login</h1>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <label id="email1">Email</label>
-            <input
-              type="email"
-              {...register("email", { required: true })}
-              id="email2"
-              placeholder="Enter Your Email"
-            />
-            {errors.email && (
-              <p style={{ color: "red", paddingLeft: "150px" }}>
-                Email is required
-              </p>
-            )}
-            <br />
-            <label id="pass1">Password</label>
-            <input
-              type="password"
-              {...register("password", { required: true })}
-              id="pass2"
-              placeholder="Enter Your Password"
-            />
-            {errors.password && (
-              <p style={{ color: "red", paddingLeft: "150px" }}>
-                Password is required
-              </p>
-            )}
-            <button type="submit" id="btn3">
-              Submit
-            </button>
-          </form>
-        </div>
+    <div className="section2">
+      <div className="container1">
+        <h1 className="loginhead">Login</h1>
+
+        <form onSubmit={handleSubmit(onSubmit)} className="login-form">
+          <label>Email</label>
+          <br />
+          <input
+            type="email"
+            placeholder="Enter your email"
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Enter a valid email",
+              },
+            })}
+          />
+          {errors.email && (
+            <span className="error">{errors.email.message}</span>
+          )}
+
+          <label>Password</label>
+          <input
+            type="password"
+            placeholder="Enter your password"
+            {...register("password", {
+              required: "Password is required",
+              minLength: {
+                value: 4,
+                message: "Minimum 4 characters required",
+              },
+            })}
+          />
+          {errors.password && (
+            <span className="error">{errors.password.message}</span>
+          )}
+
+          <button type="submit" id="btn3">
+            Login
+          </button>
+        </form>
       </div>
-    </>
+    </div>
   );
 };
 

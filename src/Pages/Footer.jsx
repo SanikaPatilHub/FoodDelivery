@@ -6,18 +6,18 @@ const Footer = () => {
       <footer className="footer1">
         <div className="footer-contact">
           <h3 className="footer-head">Get In Touch</h3>
-          <p>
+          <p className="paragraph">
             <i
               className="fa-solid fa-location-dot"
               style={{ marginRight: "0.5em" }}
             ></i>
             Mumbai ,Maharashtra
           </p>
-          <p>
+          <p className="paragraph">
             <i className="fa fa-phone-alt" style={{ marginRight: "0.5em" }}></i>
             99087849
           </p>
-          <p>
+          <p className="paragraph">
             <i className="fa fa-envelope" style={{ marginRight: "0.5em" }}></i>
             foodexpress@gmail.com
           </p>
