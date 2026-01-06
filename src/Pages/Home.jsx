@@ -8,10 +8,12 @@ const Home = ({ addToCart, search }) => {
   const contactRef = useRef(null);
   const location = useLocation();
 
+  // Filter food based on search
   const filteredFood = FoodData.filter((item) =>
     item.name.toLowerCase().includes(search?.toLowerCase() || "")
   );
 
+  // Scroll handling
   useEffect(() => {
     if ((search || location.pathname === "/menulist") && menuRef.current) {
       menuRef.current.scrollIntoView({ behavior: "smooth" });
@@ -25,15 +27,13 @@ const Home = ({ addToCart, search }) => {
   return (
     <>
       <div className="home-container">
+        {/* HERO SECTION */}
         <div className="section3">
           <h1 className="hero-text">
-            Your <span style={{ color: "blue" }}>hunger</span> solution is{" "}
-            <span style={{ color: "rgb(43, 255, 0)", fontFamily: "serif" }}>
-              Now Online
-            </span>
-            
+            Your <span style={{ color: "rgb(5, 243, 37)" }}>hunger</span> solution
+            is <span style={{ color: "orangered" }}>Now Online</span>
           </h1>
-        
+
           <h5 className="para">
             Where fresh ingredients meet irresistible flavors.
             <br />
@@ -41,21 +41,23 @@ const Home = ({ addToCart, search }) => {
             <br />
             Every bite delivers pure satisfaction.
           </h5>
-<div className="btn-container">
-           <button 
-    className="btn-secondary" 
-    onClick={() => menuRef.current?.scrollIntoView({ behavior: "smooth" })}
-  >
-    View Menu
-  </button>
-  </div>
-        </div>
-        
-        
 
-       
+          {/* VIEW MENU BUTTON */}
+          <div className="view_menu">
+            <button
+              className="btn-secondary1"
+              onClick={() =>
+                menuRef.current.scrollIntoView({ behavior: "smooth" })
+              }
+            >
+              View Menu
+            </button>
+          </div>
+        </div>
+
+        {/* MENU SECTION */}
         <div className="food-section" ref={menuRef}>
-          <h1>Menu List</h1>
+          <h1 style={{fontSize:"3rem"}}>Menu List</h1><span/>
 
           <ul className="list">
             {filteredFood.length > 0 ? (
@@ -65,11 +67,11 @@ const Home = ({ addToCart, search }) => {
                     src={item.image}
                     alt={item.name}
                     className="foodimage"
-                    style={{ width: "220px" }}
+                    style={{ width: "270px" }}
                   />
 
-                  <h3 style={{ color: "red" }}>{item.name}</h3>
-                  <h4>₹{item.price}</h4>
+                  <h5 className="item">{item.name}</h5>
+                  <h6 className="price">₹{item.price}</h6>
 
                   <button
                     className="btncart"
@@ -87,13 +89,13 @@ const Home = ({ addToCart, search }) => {
                 </li>
               ))
             ) : (
-              <p style={{ textAlign: "center" }}>No food items found </p>
+              <p style={{ textAlign: "center" }}>No food items found</p>
             )}
           </ul>
         </div>
       </div>
 
-      
+      {/* CONTACT SECTION */}
       <div ref={contactRef}>
         <Contact />
       </div>

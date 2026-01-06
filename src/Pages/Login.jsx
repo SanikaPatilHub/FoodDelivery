@@ -19,10 +19,14 @@ const Login = () => {
     if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
       localStorage.setItem("foodbite_auth", "true");
       alert("Login Successful ");
+      console.log(DEMO_EMAIL);
+      console.log(DEMO_PASSWORD);
+      
+      
       reset();
       navigate("/");
     } else {
-      alert("Invalid Email or Password ❌");
+      alert("Invalid Email or Password ");
     }
   };
 

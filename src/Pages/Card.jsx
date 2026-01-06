@@ -1,34 +1,29 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 
-
-const Card = ({ cartItems, setCartItems }) => {
+const CartPage = ({ cartItems, setCartItems }) => {
+  const navigate = useNavigate(); 
   const [promoCode, setPromoCode] = useState('');
 
-  // Save cart to localStorage whenever cartItems changes
+  // Save cart to localStorage
   useEffect(() => {
     localStorage.setItem('cartItems', JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const increaseQty = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
-
-  const decreaseQty = (id) => {
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-    );
-  };
-
   const removeItem = (id) => {
     setCartItems(cartItems.filter((item) => item.id !== id));
+  };
+
+  const updateQuantity = (id, newQuantity) => {
+    if (newQuantity <= 0) {
+      removeItem(id);
+      return;
+    }
+    setCartItems(
+      cartItems.map((item) =>
+        item.id === id ? { ...item, quantity: newQuantity } : item
+      )
+    );
   };
 
   const subtotal = cartItems.reduce(
@@ -39,86 +34,93 @@ const Card = ({ cartItems, setCartItems }) => {
   const deliveryFee = 40;
   const total = subtotal + deliveryFee;
 
-  
+  const handlePromoSubmit = () => {
+    console.log('Promo code:', promoCode);
+    alert('Promo code applied!');
+  };
 
   return (
-    <div className="cart-container">
-      <div className="cart-section">
-        <h1>Your Cart</h1>
+    <div className="cart-page">
+      <div className="cart-content">
+        <h1 className="cart-title">Your Cart</h1>
 
         {cartItems.length === 0 ? (
-          <h3>Your cart is empty</h3>
+          <div className="empty-cart">
+            <h3>Your cart is empty</h3>
+            <p>Add some delicious items to get started!</p>
+          </div>
         ) : (
           <>
             {/* Cart Table */}
-            <table className="cart-table">
-              <thead>
-                <tr>
-                  <th>Items</th>
-                  <th>Title</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                  <th>Remove</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        className="cart-item-image"
-                      />
-                    </td>
-                    <td>{item.name}</td>
-                    <td>₹{item.price}</td>
-                    <td>
-                      <div className="quantity-controls">
-                        
-                        <span>{item.quantity}</span>
-                       
-                      </div>
-                    </td>
-                    <td>₹{item.price * item.quantity}</td>
-                    <td>
-                      <button
-                        className="remove-btn"
-                        onClick={() => removeItem(item.id)}
-                      >
-                        Remove
-                      </button>
-                    </td>
+            <div className="cart-table-wrapper">
+              <table className="cart-table">
+                <thead>
+                  <tr>
+                    <th>Items</th>
+                    <th>Title</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th>Remove</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {cartItems.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="cart-item-img"
+                        />
+                      </td>
+                      <td className="item-title">{item.name}</td>
+                      <td className="item-price">₹{item.price}</td>
+                      <td className="item-quantity">{item.quantity}</td>
+                      <td className="item-total">₹{item.price * item.quantity}</td>
+                      <td>
+                        <button
+                          className="remove-button"
+                          onClick={() => removeItem(item.id)}
+                        >
+                          Remove
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
 
-            {/* Cart Summary */}
-            <div className="cart-footer">
-              <div className="cart-total-section">
+            
+              {/* Right Side - Promo Code */}
+          {/* Cart Summary Section */}
+            <div className="cart-summary-wrapper">
+              {/* Left Side - Cart Total */}
+              <div className="cart-total-box">
                 <h2>Cart Total</h2>
-                <div className="total-row">
+                <div className="total-line">
                   <span>Subtotal</span>
                   <span>₹{subtotal}</span>
                 </div>
-                <div className="total-row">
+                <div className="total-line">
                   <span>Delivery Fee</span>
                   <span>₹{deliveryFee}</span>
                 </div>
-                <div className="total-row grand-total">
+                <div className="total-line grand-total">
                   <span>Total</span>
                   <span>₹{total}</span>
                 </div>
-                
+                <button
+  className="checkout-button"
+  onClick={() => navigate("/checkout")}
+>
+  PROCEED TO CHECKOUT
+</button>
+
               </div>
 
-              
-                  
-                </div>
-              
-            
+            </div>
           </>
         )}
       </div>
@@ -126,4 +128,4 @@ const Card = ({ cartItems, setCartItems }) => {
   );
 };
 
-export default Card;
+export default CartPage;

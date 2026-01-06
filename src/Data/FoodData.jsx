@@ -22,15 +22,15 @@ const FoodData = [
   { id: 5, name: "Grilled Sandwich", price: 129, image: sandwich },
   {id: 6,name: "Chocolate Shake",price: 89,image: shake,},
   {id: 7,name: "Pavbhaji",price: 100,image: pavbhaji,},
-  {id: 8,name: "biryani",price: 200,image: biryani,},
-  {id: 9,name: "masaladosa",price: 30,image: masaladosa,},
-  {id: 10,name: "manchurian",price: 100,image: manchurian,},
-  {id: 11,name: "noodles",price: 150,image: noodles,},
-  {id: 12,name: "cream",price: 40,image: cream,},
- {id: 13,name: "makhani",price: 150,image: makhani,},
- {id: 14,name:"donut",price: 60,image: donut,},
- {id: 15,name: "bake",price: 200,image: bake,},
- {id: 16,name: "thalaiva biryani",price: 200,image: thalaiwa,}
+  {id: 8,name: "Biryani",price: 200,image: biryani,},
+  {id: 9,name: "Masala Dosa",price: 30,image: masaladosa,},
+  {id: 10,name: "Manchurian",price: 100,image: manchurian,},
+  {id: 11,name: "Noodles",price: 150,image: noodles,},
+  {id: 12,name: "Cream",price: 40,image: cream,},
+ {id: 13,name: "Makhani",price: 150,image: makhani,},
+ {id: 14,name:"Donut",price: 60,image: donut,},
+ {id: 15,name: "Bake",price: 200,image: bake,},
+ {id: 16,name: "Thalaiva Biryani",price: 200,image: thalaiwa,}
 ];
 
 export default FoodData;
