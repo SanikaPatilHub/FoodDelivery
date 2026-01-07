@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import FoodData from "../Data/FoodData";
 import Contact from "./Contact";
@@ -8,12 +8,24 @@ const Home = ({ addToCart, search }) => {
   const contactRef = useRef(null);
   const location = useLocation();
 
-  // Filter food based on search
+  // ✅ State for Read More / Read Less (per item)
+  const [expandedItems, setExpandedItems] = useState([]);
+
+  // ✅ Toggle description
+  const toggleDesc = (id) => {
+    setExpandedItems((prev) =>
+      prev.includes(id)
+        ? prev.filter((itemId) => itemId !== id)
+        : [...prev, id]
+    );
+  };
+
+  // ✅ Filter food based on search
   const filteredFood = FoodData.filter((item) =>
     item.name.toLowerCase().includes(search?.toLowerCase() || "")
   );
 
-  // Scroll handling
+  // ✅ Scroll handling
   useEffect(() => {
     if ((search || location.pathname === "/menulist") && menuRef.current) {
       menuRef.current.scrollIntoView({ behavior: "smooth" });
@@ -57,37 +69,58 @@ const Home = ({ addToCart, search }) => {
 
         {/* MENU SECTION */}
         <div className="food-section" ref={menuRef}>
-          <h1 style={{fontSize:"3rem"}}>Menu List</h1><span/>
+          <h1 style={{ fontSize: "3rem" }}>Menu List</h1>
 
           <ul className="list">
             {filteredFood.length > 0 ? (
-              filteredFood.map((item) => (
-                <li key={item.id}>
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="foodimage"
-                    style={{ width: "270px" }}
-                  />
+              filteredFood.map((item) => {
+                const isExpanded = expandedItems.includes(item.id);
 
-                  <h5 className="item">{item.name}</h5>
-                  <h6 className="price">₹{item.price}</h6>
-
-                  <button
-                    className="btncart"
-                    onClick={() => {
-                      alert("Food added to cart!");
-                      addToCart(item);
-                    }}
-                  >
-                    <i
-                      className="bi bi-cart-fill"
-                      style={{ paddingRight: "5px" }}
+                return (
+                  <li key={item.id}>
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="foodimage"
+                      style={{ width: "270px" }}
                     />
-                    Add to Cart
-                  </button>
-                </li>
-              ))
+
+                    <h5 className="item">{item.name}</h5>
+                    <h6 className="price">₹{item.price}</h6>
+
+                    {/* DESCRIPTION */}
+                    <p className="food-desc">
+                      {isExpanded
+                        ? item.desc
+                        : item.desc.slice(0, 40) + "..."}
+
+                      {item.desc.length > 40 && (
+                        <span
+                          className="read-more"
+                          onClick={() => toggleDesc(item.id)}
+                        >
+                          {isExpanded ? " Read Less" : " Read More"}
+                        </span>
+                      )}
+                    </p>
+
+                    {/* ADD TO CART */}
+                    <button
+                      className="btncart"
+                      onClick={() => {
+                        alert("Food added to cart!");
+                        addToCart(item);
+                      }}
+                    >
+                      <i
+                        className="bi bi-cart-fill"
+                        style={{ paddingRight: "5px" }}
+                      />
+                      Add to Cart
+                    </button>
+                  </li>
+                );
+              })
             ) : (
               <p style={{ textAlign: "center" }}>No food items found</p>
             )}
