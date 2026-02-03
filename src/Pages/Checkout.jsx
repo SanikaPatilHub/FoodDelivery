@@ -1,41 +1,85 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Checkout = () => {
   const navigate = useNavigate();
 
-  const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
-
+  const [cartItems, setCartItems] = useState([]);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     address: "",
     city: "",
-    state: "",
     pincode: "",
     paymentMethod: "cod",
   });
 
+  // ✅ Fetch cart from backend
+  useEffect(() => {
+    const fetchCart = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
+      try {
+        const res = await axios.get("http://localhost:5000/api/cart", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setCartItems(res.data.cart);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchCart();
+  }, [navigate]);
+
+  // ✅ Input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // ✅ Price calculation
   const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (sum, item) => sum + item.foodId.price * item.quantity,
     0
   );
 
-  const deliveryFee = cartItems.length > 0 ? 40 : 0;
+  const deliveryFee = cartItems.length ? 40 : 0;
   const total = subtotal + deliveryFee;
 
-  const handleSubmit = (e) => {
+  // ✅ Place Order
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Order placed successfully!");
-    localStorage.removeItem("cartItems");
-    navigate("/");
-    console.log(formData);
-    
+
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
+
+    try {
+      await axios.post(
+        "http://localhost:5000/api/order/place",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Order placed successfully 🎉");
+      navigate("/");
+    } catch (err) {
+      alert("Order failed ❌");
+    }
   };
 
   if (cartItems.length === 0) {
@@ -44,17 +88,31 @@ const Checkout = () => {
 
   return (
     <div className="checkout-page">
-      
-
       <div className="checkout-card">
-        <h1 className="checkout-title">Checkout</h1>
-        <form className="checkout-form" onSubmit={handleSubmit}>
+        <h1 className="checkout-title">Delivery Information</h1>
 
+        <form className="checkout-form" onSubmit={handleSubmit}>
           {/* ROW 1 */}
           <div className="row">
-            <input name="name" placeholder="Name" required onChange={handleChange} />
-            <input name="email" type="email" placeholder="Email" required onChange={handleChange} />
-            <input name="phone" placeholder="Phone" required onChange={handleChange} />
+            <input
+              name="name"
+              placeholder="Name"
+              required
+              onChange={handleChange}
+            />
+            <input
+              name="email"
+              type="email"
+              placeholder="Email"
+              required
+              onChange={handleChange}
+            />
+            <input
+              name="phone"
+              placeholder="Phone"
+              required
+              onChange={handleChange}
+            />
           </div>
 
           {/* ADDRESS */}
@@ -67,9 +125,18 @@ const Checkout = () => {
 
           {/* ROW 2 */}
           <div className="row">
-            <input name="city" placeholder="City" required onChange={handleChange} />
-            <input name="state" placeholder="State" required onChange={handleChange} />
-            <input name="pincode" placeholder="Pincode" required onChange={handleChange} />
+            <input
+              name="city"
+              placeholder="City"
+              required
+              onChange={handleChange}
+            />
+            <input
+              name="pincode"
+              placeholder="Pincode"
+              required
+              onChange={handleChange}
+            />
           </div>
 
           {/* PAYMENT */}
@@ -104,7 +171,6 @@ const Checkout = () => {
           <button className="place-order" type="submit">
             Place Order
           </button>
-
         </form>
       </div>
     </div>

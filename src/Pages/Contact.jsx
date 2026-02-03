@@ -37,6 +37,7 @@ const Contact = () => {
     <div className="checkout-container">
     
       <form className="delivery-box" onSubmit={handleSubmit(onSubmit)}>
+        
         <h1 className="contact1">Contact Us</h1>
 
         <input

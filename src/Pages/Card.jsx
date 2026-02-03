@@ -1,131 +1,159 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+// Card.jsx
+import React, { useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const CartPage = ({ cartItems, setCartItems }) => {
-  const navigate = useNavigate(); 
-  const [promoCode, setPromoCode] = useState('');
+const Card = () => {
+  const navigate = useNavigate();
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Save cart to localStorage
-  useEffect(() => {
-    localStorage.setItem('cartItems', JSON.stringify(cartItems));
-  }, [cartItems]);
+  const token = localStorage.getItem("token");
 
-  const removeItem = (id) => {
-    setCartItems(cartItems.filter((item) => item.id !== id));
+  const axiosConfig = {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+    },
   };
 
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity <= 0) {
-      removeItem(id);
+  // Fetch cart items
+  useEffect(() => {
+    if (!token) {
+      setLoading(false);
       return;
     }
-    setCartItems(
-      cartItems.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
 
+    const fetchCart = async () => {
+      try {
+        const res = await axios.get("http://localhost:5000/api/cart", axiosConfig);
+        setCartItems(res.data.cart || []);
+      } catch (err) {
+        console.error(err);
+        localStorage.removeItem("token");
+        navigate("/login");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCart();
+  }, [token, navigate]);
+
+  if (!token) return <Navigate to="/login" />;
+  if (loading) return <h3>Loading cart...</h3>;
+
+  // Calculate totals
   const subtotal = cartItems.reduce(
-    (total, item) => total + item.price * item.quantity,
+    (total, item) => total + (item.foodId?.price || 0) * item.quantity,
     0
   );
-
-  const deliveryFee = 40;
+  const deliveryFee = subtotal > 0 ? 40 : 0;
   const total = subtotal + deliveryFee;
 
-  const handlePromoSubmit = () => {
-    console.log('Promo code:', promoCode);
-    alert('Promo code applied!');
+  // Remove item from cart
+  const removeItem = async (foodId) => {
+    try {
+      const res = await axios.delete(`http://localhost:5000/api/cart/${foodId}`, axiosConfig);
+      setCartItems(res.data.cart || []);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to remove item");
+    }
+  };
+
+  // Update quantity
+  const updateQuantity = async (foodId, newQuantity) => {
+    if (newQuantity < 1) return;
+
+    try {
+      const res = await axios.put(
+        "http://localhost:5000/api/cart/update",
+        { foodId, quantity: newQuantity },
+        axiosConfig
+      );
+      setCartItems(res.data.cart || []);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update quantity");
+    }
   };
 
   return (
     <div className="cart-page">
-      <div className="cart-content">
-        <h1 className="cart-title">Your Cart</h1>
+      <h1>Your Cart</h1>
 
-        {cartItems.length === 0 ? (
-          <div className="empty-cart">
-            <h3>Your cart is empty</h3>
-            <p>Add some delicious items to get started!</p>
+      {cartItems.length === 0 ? (
+        <p>Your cart is empty</p>
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Qty</th>
+                <th>Total</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cartItems.map((item) => (
+                <tr key={item.foodId?._id}>
+                  <td>{item.foodId?.name}</td>
+                  <td>₹{item.foodId?.price}</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="1"
+                      value={item.quantity}
+                      onChange={(e) =>
+                        updateQuantity(item.foodId?._id, Number(e.target.value))
+                      }
+                    />
+                  </td>
+                  <td>₹{(item.foodId?.price || 0) * item.quantity}</td>
+                  <td>
+                    <button
+                      onClick={() => removeItem(item.foodId?._id)}
+                      style={{
+                        background: "orangered",
+                        color: "#fff",
+                        border: "none",
+                        borderRadius: "5px",
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          <div className="cart-summary">
+            <p>Subtotal: ₹{subtotal}</p>
+            <p>Delivery Fee: ₹{deliveryFee}</p>
+            <h3>Total: ₹{total}</h3>
+            <button
+              onClick={() => navigate("/checkout")}
+              style={{
+                background: "green",
+                color: "#fff",
+                border: "none",
+                borderRadius: "5px",
+                padding: "10px 15px",
+                cursor: "pointer",
+              }}
+            >
+              PROCEED TO CHECKOUT
+            </button>
           </div>
-        ) : (
-          <>
-            {/* Cart Table */}
-            <div className="cart-table-wrapper">
-              <table className="cart-table">
-                <thead>
-                  <tr>
-                    <th>Items</th>
-                    <th>Title</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                    <th>Remove</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartItems.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="cart-item-img"
-                        />
-                      </td>
-                      <td className="item-title">{item.name}</td>
-                      <td className="item-price">₹{item.price}</td>
-                      <td className="item-quantity">{item.quantity}</td>
-                      <td className="item-total">₹{item.price * item.quantity}</td>
-                      <td>
-                        <button
-                          className="remove-button"
-                          onClick={() => removeItem(item.id)}
-                        >
-                          Remove
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            
-              {/* Right Side - Promo Code */}
-          {/* Cart Summary Section */}
-            <div className="cart-summary-wrapper">
-              {/* Left Side - Cart Total */}
-              <div className="cart-total-box">
-                <h2>Cart Total</h2>
-                <div className="total-line">
-                  <span>Subtotal</span>
-                  <span>₹{subtotal}</span>
-                </div>
-                <div className="total-line">
-                  <span>Delivery Fee</span>
-                  <span>₹{deliveryFee}</span>
-                </div>
-                <div className="total-line grand-total">
-                  <span>Total</span>
-                  <span>₹{total}</span>
-                </div>
-                <button
-  className="checkout-button"
-  onClick={() => navigate("/checkout")}
->
-  PROCEED TO CHECKOUT
-</button>
-
-              </div>
-
-            </div>
-          </>
-        )}
-      </div>
+        </>
+      )}
     </div>
   );
 };
 
-export default CartPage;
+export default Card;

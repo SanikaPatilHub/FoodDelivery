@@ -1,9 +1,10 @@
+// Login.jsx
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 const Login = () => {
   const navigate = useNavigate();
-
   const {
     register,
     handleSubmit,
@@ -11,22 +12,25 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  // Demo credentials (for project purpose)
-  const DEMO_EMAIL = "sanika123@gmail.com";
-  const DEMO_PASSWORD = "3456";
+  const onSubmit = async (data) => {
+    try {
+      // ✅ Call login API
+      const res = await axios.post("http://localhost:5000/api/auth/login", data);
 
-  const onSubmit = (data) => {
-    if (data.email === DEMO_EMAIL && data.password === DEMO_PASSWORD) {
-      localStorage.setItem("foodbite_auth", "true");
-      alert("Login Successful ");
-      console.log(DEMO_EMAIL);
-      console.log(DEMO_PASSWORD);
-      
-      
+      // ✅ Store JWT token in localStorage
+      localStorage.setItem("token", res.data.token);
+
+      // Optional: store user info if backend sends it
+      // localStorage.setItem("user", JSON.stringify(res.data.user));
+
+      alert("Login Successful!");
       reset();
-      navigate("/");
-    } else {
-      alert("Invalid Email or Password ");
+
+      // ✅ Reload app so PrivateRoute detects token immediately
+      window.location.href = "/"; // redirect to home or wherever you want
+    } catch (error) {
+      // Show backend error message or default
+      alert(error.response?.data?.message || "Invalid Email or Password");
     }
   };
 
@@ -37,7 +41,6 @@ const Login = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="login-form">
           <label>Email</label>
-         
           <input
             type="email"
             placeholder="Enter your email"
@@ -49,9 +52,7 @@ const Login = () => {
               },
             })}
           />
-          {errors.email && (
-            <span className="error">{errors.email.message}</span>
-          )}
+          {errors.email && <span className="error">{errors.email.message}</span>}
 
           <label>Password</label>
           <input
@@ -59,19 +60,18 @@ const Login = () => {
             placeholder="Enter your password"
             {...register("password", {
               required: "Password is required",
-              minLength: {
-                value: 4,
-                message: "Minimum 4 characters required",
-              },
+              minLength: { value: 4, message: "Minimum 4 characters required" },
             })}
           />
-          {errors.password && (
-            <span className="error">{errors.password.message}</span>
-          )}
+          {errors.password && <span className="error">{errors.password.message}</span>}
 
           <button type="submit" id="btn3">
             Login
           </button>
+
+          <p>
+            Don’t have an account? <Link to="/register">Register</Link>
+          </p>
         </form>
       </div>
     </div>

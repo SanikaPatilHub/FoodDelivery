@@ -9,6 +9,7 @@ const SearchBar = ({ search, setSearch }) => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className="search-input"
+        
       />
       
     </div>
