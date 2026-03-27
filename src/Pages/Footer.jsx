@@ -51,6 +51,16 @@ const Footer = () => {
   </NavLink>
 </div>
         <div className="footer-top"></div> 
+    <div class="footer-social">
+  <h3 class="link_header">Follow Us</h3>
+  <div class="social-icons">
+    <a href="https://www.facebook.com/" target="blank"  aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.instagram.com/" target="blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://x.com/"  target="blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+    <a href="https://www.youtube.com/"  target="blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+  </div>
+</div>
+
       </footer>
 
       <div className="footer-bottom">
@@ -59,6 +69,8 @@ const Footer = () => {
         </a>
         , All Rights Reserved.
       </div>
+  
+
     </>
   );
 };

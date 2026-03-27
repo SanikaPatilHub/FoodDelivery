@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import emailjs from "@emailjs/browser";
 
-
 const Contact = () => {
   const {
     register,
@@ -16,91 +15,76 @@ const Contact = () => {
         "service_portfolio001",
         "template_react002",
         {
-          name: data.firstName + " " + data.lastName,
+          name: data.firstName,
           email: data.email,
           contactNo: data.phone,
-          message: "Order Checkout Form Submission",
+          message: data.message, 
         },
         "G533phsevBqhFQyIm"
       )
       .then(
         () => {
-          alert( "message sent successfully!!!");
+          alert("Message sent successfully!");
           reset();
         },
         () => {
-          alert("Failed to send message ");
+          alert("Failed to send message");
         }
       );
   };
 
   return (
     <div className="checkout-container">
-      
+    
       <form className="delivery-box" onSubmit={handleSubmit(onSubmit)}>
-        <h1>Contact Us</h1>
+        
+        <h1 className="contact1">Contact Us</h1>
 
-        <div className="row">
-          <input
-            placeholder="First Name"
-            {...register("firstName", { required: true })}
-            className="textbox1"
-            style={{
-              marginLeft:"8px"
-            }}
-          />
-          
-        </div>
-        {errors.firstName && <p>First name required</p>}
+        <input
+          placeholder="First Name"
+          {...register("firstName", { required: "First name is required" })}
+          className="textbox1"
+        />
+        {errors.firstName && <p className="error">{errors.firstName.message}</p>}
 
         <input
           placeholder="Email Address"
-          {...register("email", { required: true })}
+          {...register("email", { required: "Email is required" })}
           className="textbox1"
         />
-        {errors.email && <p>Email required</p>}
-
-       
-
-        
-
-     
+        {errors.email && <p className="error">{errors.email.message}</p>}
 
         <input
           placeholder="Phone Number"
           {...register("phone", {
-            required: true,
-            pattern: /^[0-9]{10}$/,
+            required: "Phone number is required",
+            pattern: {
+              value: /^[0-9]{10}$/,
+              message: "Enter valid 10 digit number",
+            },
           })}
           className="textbox1"
         />
-        {errors.phone && <p>Enter valid phone number</p>}
-<textarea
-  placeholder="Your Message"
-  {...register("message", {
-    required: "Message is required",
-    minLength: {
-      value: 10,
-      message: "Message must be at least 10 characters",
-    },
-  })}
-  className="message-box"
-  
-/>
+        {errors.phone && <p className="error">{errors.phone.message}</p>}
 
-{errors.message && (
-  <p className="error">{errors.message.message}</p>
-)}
-<br />
+        <textarea
+          placeholder="Your Message"
+          {...register("message", {
+            required: "Message is required",
+            minLength: {
+              value: 10,
+              message: "Message must be at least 10 characters",
+            },
+          })}
+          className="message-box"
+        />
+        {errors.message && <p className="error">{errors.message.message}</p>}
+
         <button type="submit" className="pay-btn">
           Send Message
         </button>
       </form>
-
-      
-        </div>
-      
-   
+    </div>
   );
 };
 
